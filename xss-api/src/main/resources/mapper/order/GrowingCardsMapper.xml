@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiss.dao.order.GrowingCardsDao">
+	<resultMap id="GrowingCardsMapper" type="com.xiss.model.order.GrowingCards">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="cid" property="cid" jdbcType="VARCHAR" />
+		<result column="pin" property="pin" jdbcType="VARCHAR" />
+		<result column="range" property="range" jdbcType="INTEGER" />
+	    <result column="created_at" property="createdAt" jdbcType="DATE" />
+	    <result column="updated_at" property="updatedAt" jdbcType="DATE" />
+	</resultMap>
+	<insert id="insert" parameterType="com.xiss.model.order.GrowingCards" useGeneratedKeys="true" keyProperty="id">  
+      insert into growing_cards (id, cid, pin, range, created_at, updated_at) 
+      values (nextval('growing_cards_id_seq'), #{cid}, #{pin}, #{range}, now(), now())
+    </insert>
+	<select id="getById" parameterType="int" resultMap="GrowingCardsMapper">
+		SELECT * FROM growing_cards WHERE id = #{id}
+	</select>
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiss.dao.order.GrowingUsersDao">
+	<resultMap id="GrowingUsersMapper" type="com.xiss.model.order.GrowingUsers">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="growing_card_id" property="growingCardId" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="enrolled520" property="enrolled_520" jdbcType="BOOLEAN" />
+		<result column="created_at" property="createdAt" jdbcType="DATE" />
+    	<result column="updated_at" property="updatedAt" jdbcType="DATE" />
+	</resultMap>
+	<insert id="insert" parameterType="com.xiss.model.order.GrowingUsers" useGeneratedKeys="true" keyProperty="id">  
+      insert into growing_users (id, mobile, growing_card_id, status, enrolled_520, created_at, updated_at) 
+      values (nextval('growing_users_id_seq'), #{mobile}, #{growingCardId}, #{status}, false, now(), now())
+    </insert>
+    <update id="updateGrowingCardId" parameterType="java.util.HashMap">
+	 update growing_users set enrolled_520 = #{enrolled520}, updated_at = now()
+	 where mobile=#{mobile}
+	</update>
+	<select id="getById" parameterType="int" resultMap="GrowingUsersMapper">
+		SELECT * FROM growing_users WHERE id = #{id}
+	</select>
+	<select id="getByMobile" parameterType="java.lang.String" resultMap="GrowingUsersMapper">
+		SELECT * FROM growing_users WHERE mobile = #{mobile}
+	</select>
+</mapper>

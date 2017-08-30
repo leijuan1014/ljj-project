@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiss.dao.basic.ProvinceDao" >
+  <resultMap id="BasicProvinceMap" type="com.xiss.model.basic.Province" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="provinceID" property="provinceid" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="active" property="active" jdbcType="BOOLEAN" />
+  </resultMap>
+
+    <select id="list" resultMap="BasicProvinceMap">
+        select * from basic_province where active = true order by provinceid asc
+    </select>
+    <select id="getProvinceById" resultMap="BasicProvinceMap" parameterType="java.lang.Integer">
+        select * from basic_province where id = #{id}
+    </select>
+    <select id="getProvinceByName" resultMap="BasicProvinceMap" parameterType="java.lang.String">
+        select * from basic_province where province = #{province,jdbcType=VARCHAR}
+    </select>
+</mapper>

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiss.dao.balances.BalancesDao" >
+  	<resultMap id="BalancesMap" type="com.xiss.model.balances.Balances" >
+	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="user_id" property="userId" jdbcType="INTEGER" />
+	    <result column="money" property="money" jdbcType="DOUBLE" />
+	    <result column="card_sale_money" property="cardSaleMoney" jdbcType="DOUBLE" />
+	    <result column="suite_sale_money" property="suiteSaleMoney" jdbcType="DOUBLE" />
+	    <result column="status" property="status" jdbcType="INTEGER" />
+	    <result column="receipt_image" property="receiptImage" jdbcType="VARCHAR" />
+	    <result column="apply_at" property="applyAt" jdbcType="DATE" />
+	    <result column="finished_at" property="finishedAt" jdbcType="DATE" />
+	    <result column="created_at" property="createdAt" jdbcType="DATE" />
+	    <result column="updated_at" property="updatedAt" jdbcType="DATE" />
+	    <result column="range_start" property="rangeStart" jdbcType="DATE" />
+	    <result column="range_end" property="rangeEnd" jdbcType="DATE" />
+  	</resultMap>
+  	<resultMap id="ShopsBalancesMapper" type="java.util.Map">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="money" property="money" jdbcType="DOUBLE" />
+	    <result column="card_sale_money" property="cardSaleMoney" jdbcType="DOUBLE" />
+	    <result column="suite_sale_money" property="suiteSaleMoney" jdbcType="DOUBLE" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+	    <result column="money" property="money" jdbcType="DOUBLE" />
+	    <result column="status" property="status" jdbcType="INTEGER" />
+	    <result column="receipt_image" property="receiptImage" jdbcType="VARCHAR" />
+	    <result column="apply_at" property="applyAt" jdbcType="DATE" />
+	    <result column="finished_at" property="finishedAt" jdbcType="DATE" />
+	    <result column="created_at" property="createdAt" jdbcType="DATE" />
+	    <result column="updated_at" property="updatedAt" jdbcType="DATE" />
+	    <result column="range_start" property="rangeStart" jdbcType="DATE" />
+	    <result column="range_end" property="rangeEnd" jdbcType="DATE" />
+		<result column="limit" property="limit" jdbcType="INTEGER" />
+		<result column="offset" property="offset" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap id="ShopsBalancesCountMapper" type="int">
+		<id column="total" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+	    <result column="status" property="status" jdbcType="INTEGER" />
+	    <result column="apply_at" property="applyAt" jdbcType="DATE" />
+	    <result column="finished_at" property="finishedAt" jdbcType="DATE" />
+	    <result column="created_at" property="createdAt" jdbcType="DATE" />
+	    <result column="updated_at" property="updatedAt" jdbcType="DATE" />
+	    <result column="range_start" property="rangeStart" jdbcType="DATE" />
+	    <result column="range_end" property="rangeEnd" jdbcType="DATE" />
+	</resultMap>
+	<insert id="insert" parameterType="com.xiss.model.balances.Balances" useGeneratedKeys="true" keyProperty="id">  
+      insert into balances (id,card_sale_money,suite_sale_money,money, created_at, updated_at, user_id, receipt_image, range_start, range_end, status)
+	  values(nextval('balances_id_seq'),#{cardSaleMoney},#{suiteSaleMoney},#{money},now(),now(),#{userId},#{receiptImage},#{rangeStart},#{rangeEnd},#{status})
+    </insert>
+    <select id="getById" resultMap="BalancesMap" parameterType="java.lang.Integer">
+        select * from balances where id = #{id}
+    </select>
+    <select id="getByUserId" resultMap="BalancesMap" parameterType="java.util.HashMap">
+        <![CDATA[ select * from balances where user_id = #{userId} and range_start >= '${rangeStart}' and range_end < '${rangeEnd}']]>
+    </select>
+    <update id="updateMoney" parameterType="java.util.HashMap">
+	 update balances set 
+	 <if test="cardSaleMoney != null">
+		<![CDATA[ card_sale_money = #{cardSaleMoney}, ]]>
+    </if>
+    <if test="suiteSaleMoney != null">
+		<![CDATA[ suite_sale_money = #{suiteSaleMoney}, ]]>
+    </if>
+	 money = #{money}, updated_at=now()
+	 where id = #{id}
+	</update>
+    <update id="apply" parameterType="java.util.HashMap">
+	 update balances set status = ${status}, apply_at=now(), updated_at=now()
+	 where id=${id}
+	</update>
+	<update id="finish" parameterType="java.util.HashMap">
+	 update balances set status = ${status}, receipt_image = '${receiptImage}', finished_at=now(), updated_at=now()
+	 where id=${id}
+	</update>
+	<select id="balancesQuery" resultMap="ShopsBalancesMapper" parameterType="java.util.HashMap">
+        select ROW_NUMBER() OVER (order by balances.id desc) as rownum,
+        balances.id, balances.status, shops.name,shops.province, shops.city,
+		balances.range_start,balances.range_end,balances.apply_at, balances.finished_at, balances.card_sale_money, balances.suite_sale_money, balances.money  
+        from shops, balances where 1 = 1 and shops.user_id=balances.user_id
+	    <if test="userId != null and userId != ''">
+			<![CDATA[ and balances.user_id = '${userId}']]>
+	    </if>
+	    <if test="status != null and status != ''">
+			<![CDATA[ and balances.status = '${status}']]>
+	    </if>
+	    <if test="name != null and name != ''">
+			<![CDATA[ and shops.name like '%${name}%']]>
+	    </if>
+	    <if test="province != null and province != ''">
+			<![CDATA[ and shops.province = '${province}']]>
+	    </if>
+	    <if test="city != null and city != ''">
+			<![CDATA[ and shops.city = '${city}']]>
+	    </if>
+		<if test="start != null and start != ''">
+			<![CDATA[and balances.finished_at >= '${start} 00:00:00']]>
+        </if>
+        <if test="end != null and end != ''">
+        	<![CDATA[and balances.finished_at <= '${end} 23:59:59']]>
+        </if>
+        order by balances.id desc
+	    <if test="limit != null and limit > 0">
+			<![CDATA[ limit ${limit}]]>
+	    </if>
+	    <if test="offset != null and offset > 0">
+			<![CDATA[ offset ${offset}]]>
+	    </if>
+    </select>
+    
+    <select id="balancesQueryTotal" resultMap="ShopsBalancesCountMapper" parameterType="java.util.HashMap">
+        select count(balances.id) as total
+        from shops, balances where 1 = 1 and shops.user_id=balances.user_id
+	    <if test="userId != null and userId != ''">
+			<![CDATA[ and balances.user_id = '${userId}']]>
+	    </if>
+	    <if test="status != null and status != ''">
+			<![CDATA[ and balances.status = '${status}']]>
+	    </if>
+	    <if test="name != null and name != ''">
+			<![CDATA[ and shops.name like '%${name}%']]>
+	    </if>
+	    <if test="province != null and province != ''">
+			<![CDATA[ and shops.province = '${province}']]>
+	    </if>
+	    <if test="city != null and city != ''">
+			<![CDATA[ and shops.city = '${city}']]>
+	    </if>
+		<if test="start != null and start != ''">
+			<![CDATA[ and balances.finished_at >= '${start} 00:00:00']]>
+        </if>
+        <if test="end != null and end != ''">
+        	<![CDATA[ and balances.finished_at <= '${end} 23:59:59']]>
+        </if>    
+    </select>
+    
+    <resultMap id="BalancesCardDealsDetailMapper" type="java.util.Map">
+		<result column="sellerId" property="seller_id" jdbcType="INTEGER" />
+		<result column="start" property="start" jdbcType="VARCHAR" />
+		<result column="end" property="end" jdbcType="VARCHAR" />
+		<result column="limit" property="limit" jdbcType="INTEGER" />
+		<result column="offset" property="offset" jdbcType="INTEGER" />
+	</resultMap>
+    <select id="getCardDealsByUserId" parameterType="java.util.Map" resultMap="BalancesCardDealsDetailMapper">
+	select ROW_NUMBER() OVER (ORDER BY card_deals.created_at desc) as rownum, 
+    cards.cid as cid,cards.pin as pin,
+	card_deals.commission as commission,users.mobile as mobile,cars.licensed_id as licensed_id,
+    to_char(card_deals.created_at,'YYYY-MM-DD HH12:MI:SS') as created_at,
+	to_char(card_deals.updated_at,'YYYY-MM-DD HH12:MI:SS') as updated_at
+	from card_deals, users, cars
+	left join cards on cards.car_id=cars.id
+	where card_deals.customer_id=users.id and users.id=cars.user_id 
+	and card_deals.seller_id=#{sellerId}
+	<if test="start != null and start != ''">
+		<![CDATA[and card_deals.created_at >= '${start} 00:00:00']]>
+    </if>
+    <if test="end != null and end != ''">
+        <![CDATA[and card_deals.created_at <= '${end} 23:59:59']]>
+    </if>   	
+    ORDER BY card_deals.created_at desc
+	<if test="limit != null and limit > 0">
+		<![CDATA[ limit ${limit}]]>
+    </if>
+    <if test="offset != null and offset > 0">
+		<![CDATA[ offset ${offset}]]>
+    </if>
+	</select>
+	
+	<resultMap id="BalancesCardDealsCountMapper" type="int">
+		<result column="total" property="total" jdbcType="INTEGER" />
+		<result column="sellerId" property="seller_id" jdbcType="INTEGER" />
+		<result column="start" property="start" jdbcType="VARCHAR" />
+		<result column="end" property="end" jdbcType="VARCHAR" />
+		<result column="limit" property="limit" jdbcType="INTEGER" />
+		<result column="offset" property="offset" jdbcType="INTEGER" />
+	</resultMap>
+    <select id="getCardDealsCountByUserId" parameterType="java.util.Map" resultMap="BalancesCardDealsCountMapper">
+	select count(card_deals) as total
+	from card_deals, cards, users, cars
+	where cards.car_id=cars.id and card_deals.customer_id=users.id and users.id=cars.user_id 
+	and card_deals.seller_id=#{sellerId}
+	<if test="start != null and start != ''">
+		<![CDATA[and card_deals.created_at >= '${start} 00:00:00']]>
+    </if>
+    <if test="end != null and end != ''">
+        <![CDATA[and card_deals.created_at <= '${end} 23:59:59']]>
+    </if>
+	</select>
+</mapper>

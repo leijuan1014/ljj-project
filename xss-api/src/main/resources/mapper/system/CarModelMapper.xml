@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiss.dao.system.CarModelDao">
+	<resultMap id="CarModelMapper" type="com.xiss.model.system.CarModel">
+		<id column="id" property="id" jdbcType="INTEGER" />
+    	<result column="car_brand_id" property="carBrandId" jdbcType="INTEGER" />
+    	<result column="cn_name" property="cnName" jdbcType="VARCHAR" />
+    	<result column="en_name" property="enName" jdbcType="VARCHAR" />
+    	<result column="initial_letter" property="initialLetter" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="DATE" />
+    	<result column="updated_at" property="updatedAt" jdbcType="DATE" />
+	</resultMap>	
+	<select id="getByBrandIdAndName" parameterType="java.util.HashMap" resultMap="CarModelMapper">
+		SELECT * FROM car_models WHERE car_brand_id = #{carBrandId} and cn_name =#{cnName}
+	</select>
+</mapper>

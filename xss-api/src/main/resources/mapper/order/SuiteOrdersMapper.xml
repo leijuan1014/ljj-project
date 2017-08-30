@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiss.dao.order.SuiteOrdersDao" >
+  <resultMap id="SuiteOrdersMap" type="com.xiss.model.order.SuiteOrders" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="balance_id" property="balanceId" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="payment_gateway" property="paymentGateway" jdbcType="INTEGER" />
+    <result column="trade_no" property="tradeNo" jdbcType="VARCHAR" />
+    <result column="suite_id" property="suiteId" jdbcType="INTEGER" />
+    <result column="coupon_id" property="couponId" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+    <result column="created_at" property="createdAt" jdbcType="DATE" />
+    <result column="updated_at" property="updatedAt" jdbcType="DATE" />
+    <result column="platform" property="platform" jdbcType="INTEGER" />
+    <result column="limit" property="limit" jdbcType="INTEGER" />
+	<result column="offset" property="offset" jdbcType="INTEGER" />
+  </resultMap>
+  	<insert id="insert" parameterType="com.xiss.model.order.SuiteOrders" useGeneratedKeys="true" keyProperty="id">  
+      insert into suite_orders (id, user_id, suite_id, coupon_id,state,payment_gateway,trade_no,price,quantity, platform, created_at, updated_at) 
+	  values (nextval('suite_orders_id_seq'),#{userId}, #{suiteId}, #{couponId},#{state},#{paymentGateway},#{tradeNo},#{price},#{quantity},#{platform},now(),now()
+	  )
+    </insert>
+    <select id="getById" resultMap="SuiteOrdersMap" parameterType="java.lang.Integer">
+        select * from suite_orders where id = #{id}
+    </select>
+    <select id="getByTradeNo" resultMap="SuiteOrdersMap" parameterType="java.lang.String">
+        select * from suite_orders where trade_no = #{tradeNo}
+    </select>
+    <select id="getByUserId" resultMap="SuiteOrdersMap" parameterType="java.util.HashMap">
+        select * from suite_orders orders, suites where orders.suite_id = suites.id 
+        and orders.user_id = #{userId} and suites.shop_id != 2867
+        <if test="state != null">
+			<![CDATA[ and orders.state = #{state}]]>
+        </if>
+         order by orders.updated_at desc
+        <if test="limit != null and limit > 0">
+			<![CDATA[ limit ${limit}]]>
+	    </if>
+	    <if test="offset != null and offset > 0">
+			<![CDATA[ offset ${offset}]]>
+	    </if>
+    </select>
+    <resultMap id="ShopSuiteOrdersMap" type="java.util.HashMap" >
+	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="trade_no" property="tradeNo" jdbcType="VARCHAR" />
+	    <result column="updated_at" property="updatedAt" jdbcType="DATE" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="sale_price" property="salePrice" jdbcType="VARCHAR" />
+	    <result column="limit" property="limit" jdbcType="INTEGER" />
+		<result column="offset" property="offset" jdbcType="INTEGER" />
+	</resultMap>
+    <select id="getByShopUserToken" resultMap="ShopSuiteOrdersMap" parameterType="java.util.HashMap">
+        select orders.id, orders.trade_no, to_char(orders.updated_at,'YYYY-MM-DD HH12:MI:SS') as updated_at, suites.name, orders.price
+		from suite_orders as orders, suites, shops, users where orders.suite_id=suites.id and suites.shop_id = shops.id and shops.user_id = users.id 
+        <if test="shopUserToken != null">
+			<![CDATA[ and users.authentication_token=#{shopUserToken}]]>
+        </if>
+        <if test="state != null">
+			<![CDATA[ and orders.state = #{state}]]>
+        </if>
+        <if test="balanceId != null">
+			<![CDATA[ and orders.balance_id = #{balanceId}]]>
+        </if>
+         order by orders.updated_at desc
+        <if test="limit != null and limit > 0">
+			<![CDATA[ limit ${limit}]]>
+	    </if>
+	    <if test="offset != null and offset > 0">
+			<![CDATA[ offset ${offset}]]>
+	    </if>
+    </select>
+    <update id="suiteOrderPaid" parameterType="java.util.HashMap">
+	 update suite_orders set payment_gateway = ${paymentGateway}, state = ${state}, updated_at = now()
+	 where trade_no=#{tradeNo}
+	</update>
+	<update id="updateBalanceId" parameterType="java.util.HashMap">
+	 update suite_orders set balance_id = ${balanceId}, updated_at=now()
+	 where id = #{id}
+	</update>
+	<update id="updateVerify" parameterType="java.util.HashMap">
+	 update suite_orders set state = ${state}, updated_at=now()
+	 where trade_no = #{tradeNo}
+	</update>
+</mapper>

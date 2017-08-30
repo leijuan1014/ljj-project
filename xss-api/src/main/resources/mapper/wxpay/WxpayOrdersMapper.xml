@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiss.dao.wxpay.WxpayOrderDao" >
+  <resultMap id="WxpayOrderMap" type="com.xiss.model.wxpay.WxpayOrder" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="wxpay_id" property="wxpayId" jdbcType="VARCHAR" />
+    <result column="app_id" property="appId" jdbcType="VARCHAR" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />
+    <result column="subscribed" property="subscribed" jdbcType="BOOLEAN" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="device_info" property="deviceInfo" jdbcType="VARCHAR" />
+    <result column="trade_type" property="tradeType" jdbcType="VARCHAR" />
+    <result column="trade_state" property="tradeState" jdbcType="VARCHAR" />
+    <result column="bank_type" property="bankType" jdbcType="VARCHAR" />
+    <result column="total_fee" property="totalFee" jdbcType="DOUBLE" />
+    <result column="fee_type" property="feeType" jdbcType="VARCHAR" />
+    <result column="cash_fee" property="cashFee" jdbcType="DOUBLE" />
+    <result column="cash_fee_type" property="cashFeeType" jdbcType="VARCHAR" />
+    <result column="coupon_fee" property="couponFee" jdbcType="DOUBLE" />
+    <result column="attach" property="attach" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="DATE" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="DATE" />
+    <result column="updated_at" property="updatedAt" jdbcType="DATE" />
+  </resultMap>
+  
+  	<insert id="overwriteWxpayOrder" parameterType="com.xiss.model.wxpay.WxpayOrder" useGeneratedKeys="true" keyProperty="id">  
+      insert into wxpay_orders (id, wxpay_id, app_id, open_id, subscribed, order_id, 
+      device_info, trade_type, trade_state, bank_type, total_fee, fee_type, cash_fee, 
+      cash_fee_type, coupon_fee, attach, end_time, description, created_at, updated_at) 
+	  values (nextval('wxpay_orders_id_seq'),#{wxpayId},#{appId},#{openId},#{subscribed},#{orderId},
+	  #{deviceInfo},#{tradeType},#{tradeState},#{bankType},#{totalFee},#{feeType},#{cashFee},
+	  #{cashFeeType},#{couponFee},#{attach},#{endTime},#{description},now(),now()
+	  )
+    </insert>
+    <select id="getById" resultMap="WxpayOrderMap" parameterType="java.lang.Integer">
+        select * from wxpay_orders where id = #{id}
+    </select>
+</mapper>
