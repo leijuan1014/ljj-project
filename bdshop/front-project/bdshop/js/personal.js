@@ -1,0 +1,1 @@
+define(["jquery","components","common","template","weui"],function(e,n,o,i,r){function t(){n.getMsg(apiUrl+"/front/user/user/getUserById").done(function(e){var n=e.res;if(1==n){e=e.obj;var o=i("user-info-tpl",e);$("#user-info").html(o)}})}n.addActiveClass(3),t(),$("#index-menu li").eq(2).addClass("active");$("#order-box")});

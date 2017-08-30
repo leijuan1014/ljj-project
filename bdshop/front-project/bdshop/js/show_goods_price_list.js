@@ -1,0 +1,1 @@
+define(["jquery","components","common","weui"],function(n,e,o,c){});

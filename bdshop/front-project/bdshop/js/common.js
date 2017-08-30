@@ -1,0 +1,1 @@
+define(["jquery","fastclick"],function(c,t){t.attach(document.body)});

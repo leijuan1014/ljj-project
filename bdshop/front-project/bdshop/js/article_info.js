@@ -1,0 +1,1 @@
+define(["jquery","components","common","template"],function(e,t,n,i){function r(e){var n=apiUrl+"/front/article/article/getArticleById?articleId="+e;t.getMsg(n).done(function(e){var t=e.res;if(1==t){var n=i("article-tpl",e);document.getElementById("article-info").innerHTML=n}})}r(t.GetQueryString("id"))});

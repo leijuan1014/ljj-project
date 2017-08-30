@@ -1,0 +1,7 @@
+wxpay:
+    appId: wx46b543acf6dbc7fa
+    appSecret: e7d006686de01c677fd218a7b53e5795
+    merchantId: 1415297202
+    key: 1DC11A9531C172C7082663EE1F1B1309
+    certPath: /root/tool/weixin/wxpay/apiclient_cert.p12
+    notifyUrl: https://api.autoxss.com/xisstest/api/wxpay/burningManJsapiNotify
