@@ -1,0 +1,31 @@
+package com.alipay.test;
+
+import java.math.BigDecimal;
+
+import com.alipay.bean.AlipayAppPayRequest;
+import com.alipay.server.AlipayAccount;
+import com.alipay.server.AlipayPrepareForApp;
+
+public class PayTest {
+	public static void main(String[] args) {
+		AlipayAppPayRequest request = new AlipayAppPayRequest();
+		request.setBody("测试商品");
+		request.setExpiry("90m");
+		request.setOrderId("2017081801");
+		request.setSubject("测试商品");
+		request.setTotalAmount(new BigDecimal(0.01));
+		AlipayAccount account = new AlipayAccount();
+		account.setAppId("2016111802958037");
+		account.setDirectPayPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDI6d306Q8fIfCOaTXyiUeJHkrIvYISRcc73s3vF1ZT7XN8RNPwJxo8pWaJMmvyTn9N4HQ632qJBVHf8sxHi/fEsraprwCtzvzQETrNRwVxLO5jVmRGi60j8Ue1efIlzPXV9je9mkjzOmdssymZkh2QhUrCmZYI/FCEa3/cNMW0QIDAQAB");
+		account.setPartnerId("");
+		account.setPrivateKey("MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCQYibLedxOJdPNehEi3rbbAOwHNGzAF5+lQjrCha1CvUMmH6g2yGHC/VDBn2kvS5FVyOCB67BaHVa8hMNngkyV0gt9mm7t88IUIZ0ugyUTLnEAGRzx53epJCXLRfybN4iIK2ObVYqXx+H/Q10UTfjXkRi5MGp+T8Vg2Wvnb5Y7OPdSWdMXSVeNDqfmr21UJbT0/uLIM7IQL7uGkij60EBQmPvnsTkoGFym3yzfjs1dvo12VzKUKXQWPcm/dEDUZ7/S2aidPJf5qYmAFy0NaWLmN5cBCulCLvJV62vBXEqSMlpe5r3fNtHNXe2s9HXGB3PhuD5ydOiC8HqUFzGN4wEZAgMBAAECggEAPYBRniLOYMtkKQZx/jR4F1mRMJB4MmrdqftIJEvkvaT40WhyssMwQWq913wbxfWedrgWScEnYXtV0v+KbLDoBnluQ5Zg4iMO7JxU49chF8aUg8IuviwmoHmxT6EENOm20qoIx8XsPzL5ZU5Ae8Gq2cgIi/m/owY/wT1b5T129MpvNYrBDss2BUgbMQaDOydE2rPgBwqvhJgxWq/vJOiaGak/5/s9lR1+w5b1whw09Ku1JxvDY+cOUyXXTn4DTddwayq3Bq47UlJRaTDYti4vmtzEhfyPmRxBuUFEAii+Ve2yZjJ+ZjZ2Hpvg+eNf/yUQ/zj+zA6L5qL2mdJJxIXtsQKBgQDJrLJ0A+seWrZ6eFyVaWE8+jzGlbvc/mFO3u9/+OmesTY26774qB2epL5elDKNUQ5Vx6jfO3qiGJ56vquFEetkCYBNDSgZgWxDQh0OjF8TaBHxasWs+MNMbIU9NgDqVKSP0hfqXSuwaa89bcoV3OOpUAv+5C42tPUpO6g4h2y2GwKBgQC3RrRCacmCXyZSsF8OVktrc/vbwfpSToRPW0oYJQHlDx+gxKzWFW2hNBKPofKBjfwFeeyypd/9XVwDJIlU1TRxL0IU3WSf6wmOU2DYtUjoz8vt+JEdbB9cf4uyBBr+054TJMVkwphQeoRAdktoSaOWlrd0S0iQ0S70NDiBKT0o2wKBgQCx1o7ajSYE81scbgy+WFm9yrBTMXCi9NJcGWy6vYVNQdmb3pDddmoAHigdALP/N63baJ/6kdmXHPyLIp3fTyjyYwp3Z5WnwB/2w1MaJCAm3cuMxmmgGREm0D9B9eAiwxcGF+6s5RIEk31LPwhH9SvwfrzFPPOfnDzf6lJx3sG3ZwKBgBuA/c41p+rrsomYNDunkZvnhPVer90oMUzja0QiUZ15Xoq22SUrhA88DEkHyafNkfOUb4QDxpB0MTm7gux7LmqJ6AXPj6k8EWwNcSw0UGO3w2fL9KMQtcggz+sAGLkDMua2jvTnCwqQyEYQOpLE8krIBXHrVlF9Qumc6JnhgW8fAoGBAJtpcPC8nLFv2Z4WhKE5+e2T62mFxv5J5D5nGE29a4q83Y51XxYwrVrOsxU0DxDnv7dtLonsD9LLRYTuehMXpz/Icqc0/33aIMwBexV5fBdgidesB1KyRVECSi2M7T7QeG0X3dscD9nuz/qOWFkvLewgcAxX5vYcp1jg+4eUzn6F");
+		account.setPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCcnZp53lBU8vFnnWLcgGwlSKhqDgbYVGi3ELvbnDrSh7nCzKFHI11miqdRJkYa9bVXO5Oe96uL8USfCkK+0piPLsW4YSs5aElmL0fpFDFL32BrFB4jW5gkI2bMVuMQ9qxgzEVWyYLr5aeYM1noh7OB6yTIl91XeChTElXI3XQqKQIDAQAB");
+		String directPayNotifyUrl = "";
+		
+		AlipayPrepareForApp action = new AlipayPrepareForApp();
+		action.setRequest(request);
+		action.setAccount(account);
+		action.setNotifyUrl(directPayNotifyUrl);
+		action.run();
+	}
+}
