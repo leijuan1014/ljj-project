@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiss.dao.order.CouponsDao" >
+  <resultMap id="CouponMap" type="com.xiss.model.order.Coupon" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="avatar" property="avatar" jdbcType="VARCHAR" />
+    <result column="deductible" property="deductible" jdbcType="DOUBLE" />
+    <result column="valid_start" property="validStart" jdbcType="DATE" />
+    <result column="valid_end" property="validEnd" jdbcType="DATE" />
+    <result column="created_at" property="createdAt" jdbcType="DATE" />
+    <result column="updated_at" property="updatedAt" jdbcType="DATE" />
+  </resultMap>
+    <select id="getById" resultMap="CouponMap" parameterType="java.lang.Integer">
+        select * from coupons where id = #{id}
+    </select>
+    <select id="getCoupons" resultMap="CouponMap" parameterType="java.util.HashMap">
+    	select cu.id, cp.name, cp.avatar, cp.memo, cp.valid_start, cp.valid_end, cp.deductible,cp.created_at,cp.updated_at
+		from coupons cp, coupon_users cu 
+		where cu.coupon_id = cp.id and cu.user_id=#{userId} 
+		<if test="status != null">
+			<![CDATA[ and cu.status = #{status} ]]>
+        </if>
+        <if test="isvalid != null and isvalid == true">
+			<![CDATA[ and cp.valid_start <= now() and cp.valid_end >= now() ]]>
+        </if>
+        <if test="isvalid != null and isvalid == false">
+			<![CDATA[ and cp.valid_end < now() ]]>
+        </if>
+        order by cu.updated_at desc
+    </select>
+</mapper>

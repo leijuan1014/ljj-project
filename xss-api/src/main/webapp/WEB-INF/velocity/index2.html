@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<div class="main-wrapper">
+    <div id="haslogin" class="myw-cont">
+        <!--我的头像-->
+        <div class="my-headw">
+            <div id="upimage" class="my-head">
+                   <input type="file" name="receiptImage" id="file_upload"/>
+			</div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="http://localhost:8080/xiss/js/jquery.js"></script>
+<script src="http://localhost:8080/xiss/js/fileupload/jquery.ui.widget.js"></script>
+<script src="http://localhost:8080/xiss/js/fileupload/jquery.fileupload.js"></script>
+<script src="http://localhost:8080/xiss/js/fileupload/jquery.iframe-transport.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+
+	function onBridgeReady(){
+		var params = "wareId=1&userToken=x_ofp65pD5koZqxQEw4M&deviceInfo=jsapi&couponId=1&amount=0.01";
+		alert(params)
+		$.ajax({
+             url: "http://localhost:9999/xiss/api/wxpay/jsapi?wareId=1&userToken=x_ofp65pD5koZqxQEw4M&deviceInfo=jsapi&couponId=1&amount=0.01",
+             data:params,
+             type:"POST",
+             dataType:"json",
+             success:function(data){
+             	alert(data)
+             },
+             error: function () {
+             }
+         })
+	}
+	/*
+	if (typeof WeixinJSBridge == "undefined"){
+	   if( document.addEventListener ){
+	       document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+	   }else if (document.attachEvent){
+	       document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+	       document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+	   }
+	}else{
+	   onBridgeReady();
+	}
+*/	
+	$("#file_upload").fileupload({
+        url: 'http://localhost:8080/xiss/balances/finished?id=1',
+        type:"POST",
+        dataType:"json",
+        add: function (e, data) {
+            if(data.files[0].size>5400000) {
+                alert("请上传小于5M的照片");
+                return;
+            }else if (data.autoUpload || (data.autoUpload !== false &&
+                    $(this).fileupload('option', 'autoUpload'))) {
+                data.process().done(function () {
+                    data.submit();
+                });
+            }
+        },
+        done:function (e, data) {
+            if(data.result.code=='0'){
+                //$('#upimage').attr("src", data.result.fileUrl);
+                //$('#upimage').attr('style', 'background-image:url('+data.result.fileUrl+')');
+            }else{
+                if(data.result.message){
+                	alert(data.result.message);
+                } else {
+                	alert("上传失败！");
+                }
+            }
+        },
+        fail:function(e, data){
+            if(data.total>5400000){
+            	alert("文件大小超过限制，请上传小于5M的照片");
+            }else{
+            	alert(JSON.stringify(data.messages));
+            }
+        }
+    });
+</script>
+</html>

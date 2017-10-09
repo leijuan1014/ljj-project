@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiss.dao.order.CouponUsersDao" >
+  <resultMap id="CouponUserMap" type="com.xiss.model.order.CouponUser" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="coupon_id" property="couponId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="created_at" property="createdAt" jdbcType="DATE" />
+    <result column="updated_at" property="updatedAt" jdbcType="DATE" />
+  </resultMap>
+    <select id="getById" resultMap="CouponUserMap" parameterType="java.lang.Integer">
+        select * from coupon_users where id = #{id}
+    </select>
+    <update id="updateStatusById" parameterType="java.util.HashMap">
+	 update coupon_users set status = ${status}, updated_at = now()
+	 where id=#{id}
+	</update>
+</mapper>

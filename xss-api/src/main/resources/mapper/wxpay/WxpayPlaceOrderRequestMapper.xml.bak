@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiss.dao.order.OrderDao" >
+  <resultMap id="OrderMap" type="com.xiss.model.order.Order" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="device_info" property="deviceInfo" jdbcType="VARCHAR" />
+    <result column="body" property="body" jdbcType="VARCHAR" />
+    <result column="attach" property="attach" jdbcType="VARCHAR" />
+    <result column="order_trade_no" property="orderTradeNo" jdbcType="VARCHAR" />
+    <result column="fee_type" property="feeType" jdbcType="VARCHAR" />
+    <result column="total_fee" property="totalFee" jdbcType="DOUBLE" />
+    <result column="client_ip" property="clientIp" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="DATE" />
+    <result column="due_time" property="dueTime" jdbcType="DATE" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
+    <result column="trade_type" property="tradeType" jdbcType="VARCHAR" />
+    <result column="limit_pay" property="limitPay" jdbcType="VARCHAR" />
+  </resultMap>
+	<insert id="insert" parameterType="com.xiss.model.order.Order" useGeneratedKeys="true" keyProperty="id">  
+      insert into balances 
+	  values(nextval('balances_id_seq'),#{userId},#{yearMonth},#{money},#{status},now(),now()
+	  )
+    </insert>
+    <select id="getById" resultMap="OrderMap" parameterType="java.lang.String">
+        select * from orders where id = #{id}
+    </select>
+    <update id="orderPaid" parameterType="java.util.HashMap">
+	 update orders set payment_gateway = ${paymentGateway}, amount = ${amount}, finished_at = ${finishedAt}
+	 where id=#{id}
+	</update>
+</mapper>

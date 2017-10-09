@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiss.dao.order.OrderDao" >
+  <resultMap id="OrderMap" type="com.xiss.model.order.Orders" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="payment_gateway" property="paymentGateway" jdbcType="INTEGER" />
+    <result column="trade_no" property="tradeNo" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+    <result column="distcount" property="distcount" jdbcType="DOUBLE" />
+    <result column="subject" property="subject" jdbcType="VARCHAR" />
+    <result column="created_at" property="createdAt" jdbcType="DATE" />
+    <result column="updated_at" property="updatedAt" jdbcType="DATE" />
+    <result column="platform" property="platform" jdbcType="INTEGER" />
+    <result column="total_amount" property="totalAmount" jdbcType="DOUBLE" />
+    <result column="body" property="body" jdbcType="VARCHAR" />
+    <result column="finished_at" property="finishedAt" jdbcType="DATE" />
+    <result column="canceled_at" property="canceledAt" jdbcType="DATE" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  	<insert id="insert" parameterType="com.xiss.model.order.Orders" useGeneratedKeys="true" keyProperty="id">  
+      insert into orders (id, user_id,state,payment_gateway,trade_no,price,quantity,distcount,subject,
+      created_at, updated_at, platform, total_amount, body, finished_at, canceled_at, status) 
+	  values (nextval('orders_id_seq'),#{userId},#{state},#{paymentGateway},#{tradeNo},#{price},#{quantity},#{distcount},#{subject},
+	  now(),now(),#{platform},#{totalAmount},#{body},null,null,#{status}
+	  )
+    </insert>
+    <select id="getById" resultMap="OrderMap" parameterType="java.lang.Long">
+        select * from orders where id = #{id}
+    </select>
+    <select id="getByTradeNo" resultMap="OrderMap" parameterType="java.lang.String">
+        select * from orders where trade_no = #{tradeNo}
+    </select>
+    <update id="orderPaid" parameterType="java.util.HashMap">
+	 update orders set payment_gateway = ${paymentGateway}, total_amount = ${totalAmount}, finished_at = ${finishedAt}, updated_at = now()
+	 where trade_no=#{tradeNo}
+	</update>
+</mapper>

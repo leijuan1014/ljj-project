@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiss.dao.system.CarsDao">
+	<resultMap id="CarsMapper" type="com.xiss.model.system.Car">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="car_model_id" property="carModelId" jdbcType="INTEGER" />
+		<result column="licensed_id" property="licensedId" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="joined_at" property="joinedAt" jdbcType="DATE" />
+    	<result column="visited_at" property="visitedAt" jdbcType="DATE" />
+    	<result column="user_id" property="userId" jdbcType="INTEGER" />
+    	<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="created_at" property="createdAt" jdbcType="DATE" />
+    	<result column="updated_at" property="updatedAt" jdbcType="DATE" />
+		<result column="valid_at" property="validAt" jdbcType="DATE" />
+		<result column="vin" property="vin" jdbcType="VARCHAR" />
+		<result column="engine_no" property="engineNo" jdbcType="VARCHAR" />
+	</resultMap>
+	<insert id="save" parameterType="com.xiss.model.system.Car" useGeneratedKeys="true" keyProperty="id">  
+      insert into cars (id, created_at, updated_at, car_model_id, licensed_id, user_id)  
+      values (nextval('cars_id_seq'),now(),now(), #{carModelId}, #{licensedId}, #{userId})
+    </insert>
+	<select id="getByLicensedId" parameterType="String" resultMap="CarsMapper">
+		SELECT * FROM cars WHERE licensed_id = #{licensedId}
+	</select>
+	<update id="updateValid" parameterType="java.util.HashMap">
+	 update cars set valid_at = '${validAt}', updated_at=now(), joined_at=now()
+	 where licensed_id = #{licensedId}
+	</update>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiss.dao.shops.CardsDao">
+	<resultMap id="CardsMapper" type="com.xiss.model.shops.Cards">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="cid" property="cid" jdbcType="VARCHAR" />
+		<result column="pin" property="pin" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="created_at" property="createdAt" jdbcType="DATE" />
+    	<result column="updated_at" property="updatedAt" jdbcType="DATE" />
+		<result column="actived_at" property="activedAt" jdbcType="DATE" />
+		<result column="car_id" property="carId" jdbcType="INTEGER" />
+		<result column="range" property="range" jdbcType="INTEGER" />
+		<result column="channel" property="channel" jdbcType="INTEGER" />
+		<result column="price" property="price" jdbcType="DOUBLE" />
+		<result column="growing_user_id" property="growingUserId" jdbcType="INTEGER" />
+	</resultMap>
+	<insert id="insert" parameterType="com.xiss.model.shops.Cards" useGeneratedKeys="true" keyProperty="id">  
+      insert into cards (id, cid, pin, status, range, channel, created_at, updated_at, growing_user_id) 
+      values (nextval('cards_id_seq'), #{cid}, #{pin}, #{status}, #{range}, #{channel}, now(), now(), #{growingUserId})
+    </insert>
+	<select id="getById" parameterType="int" resultMap="CardsMapper">
+		SELECT * FROM cards WHERE id = #{id}
+	</select>
+	<select id="getByPin" parameterType="java.lang.String" resultMap="CardsMapper">
+		SELECT * FROM cards WHERE pin = #{pin}
+	</select>
+	<select id="getByCid" parameterType="java.lang.String" resultMap="CardsMapper">
+		SELECT * FROM cards WHERE cid = #{cid}
+	</select>
+</mapper>
